@@ -10,6 +10,7 @@ namespace MAASoft.HomeBanking.DataAccess
 {
     public class QueriesSocios : Queries
     {
+        #region SELECT
         public Socio QuerySocioPorDNI(int nroDocumento)
         {
             Socio valor = null;
@@ -48,7 +49,7 @@ namespace MAASoft.HomeBanking.DataAccess
             Socio valor = null;
 
             string cmd =
-                "SELECT codigo,nombre,domici,locali,telefo,fax,celular,nrodoc,socade,cuota,fecing,fecnac,tipodoc,cuit,sitiva,mail " +
+                "SELECT codigo,nombre,domici,locali,codpostal,telefo,fax,celular,nrodoc,socade,cuota,fecing,fecnac,tipodoc,cuit,sitiva,mail " +
                 " FROM socios WHERE cuit = ?";
 
             using (var conn = new OleDbConnection(connetionString))
@@ -75,15 +76,13 @@ namespace MAASoft.HomeBanking.DataAccess
             return valor;
         }
 
-        //COMIENZO NUEVO METODO
-
         public List<Socio> QuerySocioPorNombre(string nombre)
         {
             List<Socio> valor = new List<Socio>();
 
             nombre = nombre.ToUpper();
 
-            string cmd = "SELECT codigo,nombre,domici,locali,telefo,fax,celular,nrodoc,socade,cuota,fecing,fecnac,tipodoc,cuit,sitiva,mail " +
+            string cmd = "SELECT codigo,nombre,domici,locali,codpostal,telefo,fax,celular,nrodoc,socade,cuota,fecing,fecnac,tipodoc,cuit,sitiva,mail " +
                 " FROM socios WHERE nombre like '%"+ nombre + "%'";
 
             using (var conn = new OleDbConnection(connetionString))
@@ -113,7 +112,50 @@ namespace MAASoft.HomeBanking.DataAccess
 
         }
 
-        //FIN NUEVO METODO
+        #endregion
+
+        #region INSERT
+        #endregion
+
+        #region UPDATE
+
+        public RespuestaQuery QueryActualizarSocio(Socio socio)
+        {
+            try
+            {
+                string cmd =
+                    "UPDATE dbo.socios SET domici = ?, locali = ?, codpostal = ?, telefo = ?, celular = ? " +
+                    "WHERE CustomerID = ?";
+
+                using (var conn = new OleDbConnection(connetionString))
+                {
+                    conn.Open();
+
+                    using (var cmdOleDb = new OleDbCommand(cmd, conn))
+                    {
+                        cmdOleDb.Parameters.Add("@domici", OleDbType.Decimal).Value = socio.Domicilio;
+                        cmdOleDb.Parameters.Add("@locali", OleDbType.Decimal).Value = socio.Localidad;
+                        cmdOleDb.Parameters.Add("@codpostal", OleDbType.Decimal).Value = socio.CodPostal;
+                        cmdOleDb.Parameters.Add("@telefo", OleDbType.Decimal).Value = socio.Telefono;
+                        cmdOleDb.Parameters.Add("@celular", OleDbType.Decimal).Value = socio.Celular;
+                        cmdOleDb.ExecuteNonQuery();
+                    }
+                    conn.Close();
+                }
+                return RespuestaQuery.OK;
+            }
+            catch
+            {
+                return RespuestaQuery.Error;
+            }
+        }
+
+        #endregion
+
+        #region DELETE
+        #endregion
+
+        #region MAP
 
         private Socio MapearSocio(OleDbDataReader reader)
         {
@@ -123,6 +165,7 @@ namespace MAASoft.HomeBanking.DataAccess
                 Nombre = Convert.ToString(reader["nombre"]).Trim(),
                 Domicilio = Convert.ToString(reader["domici"]).Trim(),
                 Localidad = Convert.ToString(reader["locali"]).Trim(),
+                CodPostal = Convert.ToString(reader["codpostal"]).Trim(),
                 Telefono = Convert.ToString(reader["telefo"]).Trim(),
                 Fax = Convert.ToString(reader["fax"]).Trim(),
                 Celular = Convert.ToString(reader["celular"]).Trim(),
@@ -137,5 +180,7 @@ namespace MAASoft.HomeBanking.DataAccess
                 SituacionIva = Convert.ToString(reader["sitiva"]).Trim(),
             };
         }
+
+        #endregion
     }
 }

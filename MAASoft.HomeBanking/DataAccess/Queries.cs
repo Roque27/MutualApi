@@ -27,5 +27,11 @@ namespace MAASoft.HomeBanking.DataAccess
                 ? (DateTime?)null
                 : dateTime.Value;
         }
+
+        public enum RespuestaQuery
+        {
+            OK,
+            Error
+        }
     }
 }

@@ -11,6 +11,7 @@ namespace MAASoft.HomeBanking.Models
         public string Nombre { get; set; }
         public string Domicilio { get; set; }
         public string Localidad { get; set; }
+        public string CodPostal { get; set; }
         public string Telefono { get; set; }
         public string Fax { get; set; }
         public string Celular { get; set; }

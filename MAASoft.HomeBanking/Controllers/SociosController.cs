@@ -54,8 +54,6 @@ namespace MAASoft.HomeBanking.Controllers
             }
         }
 
-        //COMIENZO NUEVO METODO
-
         [HttpGet]
         public RespuestaOperacion<IEnumerable<Socio>> ObtenerSocioPorNombre(string nombre)
         {
@@ -70,7 +68,70 @@ namespace MAASoft.HomeBanking.Controllers
             }
         }
 
-        //FIN NUEVO METODO
+        [HttpGet]
+        public RespuestaOperacion<Socio> ObtenerSocioPorNombreYEmail(string nombre, string email)
+        {
+            List<Socio> Socios;
+            try
+            {
+                Socios = consulta.QuerySocioPorNombre(nombre);
 
+                if (Socios != null && Socios.Count() > 0)
+                    if (Socios.Count() > 1)
+                    {
+                        Socio Socio = Socios.FirstOrDefault(s => s.Email.Equals(email));
+                        
+                        return new RespuestaOperacion<Socio>(Socio);
+                    }
+                    else
+                        return new RespuestaOperacion<Socio>(Socios.FirstOrDefault());
+                else
+                    return new RespuestaOperacion<Socio>("No existe el socio");
+
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex.Message, ex);
+                return new RespuestaOperacion<Socio>("No se pudieron obtener socios por nombre y email.");
+            }
+        }
+
+        [HttpPost]
+        public RespuestaOperacion<String> ActualizarSocio([FromBody] Socio socio)
+        {
+            try
+            {
+                //if (consulta.QueryActualizarSocio(socio) == Queries.RespuestaQuery.OK)
+                //    return new RespuestaOperacion<string>("OK");
+                //else
+                    return new RespuestaOperacion<string>("No se pudo actualizar la informacion del socio.");
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex.Message + " ,InnerException: " + (ex.InnerException != null? ex.InnerException.Message : String.Empty), ex);
+                return new RespuestaOperacion<string>("Ocurrio un error y no se pudo actualizar la informacion del socio.");
+            }
+        }
+
+        public class Socio2
+        {
+            public int Codigo { get; set; }
+            public string Nombre { get; set; }
+            public string Domicilio { get; set; }
+            public string Localidad { get; set; }
+            public string CodPostal { get; set; }
+            public string Telefono { get; set; }
+            public string Fax { get; set; }
+            public string Celular { get; set; }
+            public string Email { get; set; }
+            public char Socade { get; set; }
+            public decimal Cuota { get; set; }
+            public DateTime FechaIngreso { get; set; }
+            public DateTime FechaNacimiento { get; set; }
+            public string TipoDocumento { get; set; }
+            public long NroDocumento { get; set; }
+            public long CUIT { get; set; }
+            public string SituacionIva { get; set; }
+        }
     }
 }
