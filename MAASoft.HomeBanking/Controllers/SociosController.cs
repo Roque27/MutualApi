@@ -101,9 +101,9 @@ namespace MAASoft.HomeBanking.Controllers
         {
             try
             {
-                //if (consulta.QueryActualizarSocio(socio) == Queries.RespuestaQuery.OK)
-                //    return new RespuestaOperacion<string>("OK");
-                //else
+                if (consulta.QueryActualizarSocio(socio) == Queries.RespuestaQuery.OK)
+                    return new RespuestaOperacion<string>("OK", false);
+                else
                     return new RespuestaOperacion<string>("No se pudo actualizar la informacion del socio.");
             }
             catch (Exception ex)

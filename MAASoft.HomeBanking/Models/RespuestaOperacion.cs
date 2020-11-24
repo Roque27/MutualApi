@@ -17,10 +17,10 @@ namespace MAASoft.HomeBanking.Models
             Resultado = resultado;
         }
 
-        public RespuestaOperacion(string mensajeError)
+        public RespuestaOperacion(string mensajeError, bool tieneError = true)
         {
             MensajeError = mensajeError;
-            TieneError = true;
+            TieneError = tieneError;
         }
     }
 }

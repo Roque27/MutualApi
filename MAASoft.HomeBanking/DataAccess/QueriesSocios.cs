@@ -124,8 +124,8 @@ namespace MAASoft.HomeBanking.DataAccess
             try
             {
                 string cmd =
-                    "UPDATE dbo.socios SET domici = ?, locali = ?, codpostal = ?, telefo = ?, celular = ? " +
-                    "WHERE CustomerID = ?";
+                    "UPDATE socios SET domici = ?, locali = ?, codpostal = ?, telefo = ?, celular = ? " +
+                    "WHERE nombre = ? AND mail = ?";
 
                 using (var conn = new OleDbConnection(connetionString))
                 {
@@ -133,18 +133,20 @@ namespace MAASoft.HomeBanking.DataAccess
 
                     using (var cmdOleDb = new OleDbCommand(cmd, conn))
                     {
-                        cmdOleDb.Parameters.Add("@domici", OleDbType.Decimal).Value = socio.Domicilio;
-                        cmdOleDb.Parameters.Add("@locali", OleDbType.Decimal).Value = socio.Localidad;
-                        cmdOleDb.Parameters.Add("@codpostal", OleDbType.Decimal).Value = socio.CodPostal;
-                        cmdOleDb.Parameters.Add("@telefo", OleDbType.Decimal).Value = socio.Telefono;
-                        cmdOleDb.Parameters.Add("@celular", OleDbType.Decimal).Value = socio.Celular;
+                        cmdOleDb.Parameters.Add("@domici", OleDbType.VarChar).Value = socio.Domicilio;
+                        cmdOleDb.Parameters.Add("@locali", OleDbType.VarChar).Value = socio.Localidad;
+                        cmdOleDb.Parameters.Add("@codpostal", OleDbType.Integer).Value = Convert.ToInt32(socio.CodPostal);
+                        cmdOleDb.Parameters.Add("@telefo", OleDbType.VarChar).Value = socio.Telefono;
+                        cmdOleDb.Parameters.Add("@celular", OleDbType.VarChar).Value = socio.Celular;
+                        cmdOleDb.Parameters.Add("@nombre", OleDbType.VarChar).Value = socio.Nombre.ToUpper();
+                        cmdOleDb.Parameters.Add("@mail", OleDbType.VarChar).Value = socio.Email;
                         cmdOleDb.ExecuteNonQuery();
                     }
                     conn.Close();
                 }
                 return RespuestaQuery.OK;
             }
-            catch
+            catch(Exception e)
             {
                 return RespuestaQuery.Error;
             }
