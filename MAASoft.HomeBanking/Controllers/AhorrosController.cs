@@ -18,11 +18,13 @@ namespace MAASoft.HomeBanking.Controllers
     {
         private readonly log4net.ILog logger;
         QueriesAhorros consulta;
+        QueriesSocios consultaSocios;
 
         public AhorrosController()
         {
             logger = log4net.LogManager.GetLogger("Ahorros");
             consulta = new QueriesAhorros();
+            consultaSocios = new QueriesSocios();
         }
 
         /// <summary>
@@ -48,6 +50,48 @@ namespace MAASoft.HomeBanking.Controllers
             {
                 logger.Error(ex.Message, ex);
                 return new RespuestaOperacion<SaldoCajaAhorro>("No se pudo obtener el saldo de la caja de ahorro.");
+            }
+        }
+
+        /// <summary>
+        /// Consultas Saldos en Cajas de Ahorros por Socio.
+        /// </summary>
+        /// <param name="nombre">Nombre del socio.</param>
+        /// <param name="email">Email del socio.</param>
+        /// <returns>Devuelve lista de objetos SaldoCajaAhorro.</returns>
+        [HttpGet]
+        public RespuestaOperacion<IEnumerable<SaldoCajaAhorro>> ObtenerSaldosCajaDeAhorroPorSocio(string nombre, string email)
+        {
+            try
+            {
+                Socio Socio = null;
+                List<Socio> Socios = consultaSocios.QuerySocioPorNombre(nombre);
+
+                if (Socios != null && Socios.Count() > 0)
+                    if (Socios.Count() > 1)
+                    {
+                        Socio = Socios.FirstOrDefault(s => s.Email.Equals(email));
+                    }
+                    else
+                        Socio = Socios.FirstOrDefault();
+                if(Socio != null)
+                {
+                    var saldos = consulta.QueryObtenerSaldosCajaDeAhorros(Socio.Codigo);
+                    if (saldos == null)
+                    {
+                        return new RespuestaOperacion<IEnumerable<SaldoCajaAhorro>>("No se encontró la cuenta solicitada.");
+                    }
+
+                    return new RespuestaOperacion<IEnumerable<SaldoCajaAhorro>>(saldos);
+                }
+                else
+                    return new RespuestaOperacion<IEnumerable<SaldoCajaAhorro>>("No se encontró la cuenta solicitada.");
+
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex.Message, ex);
+                return new RespuestaOperacion<IEnumerable<SaldoCajaAhorro>>("No se pudo obtener los saldos de las cajas de ahorro por Socio.");
             }
         }
 

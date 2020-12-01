@@ -47,6 +47,39 @@ namespace MAASoft.HomeBanking.DataAccess
             return valor;
         }
 
+        public List<SaldoCajaAhorro> QueryObtenerSaldosCajaDeAhorros(int cuenta)
+        {
+            List<SaldoCajaAhorro> filas = new List<SaldoCajaAhorro>();
+
+            string cmd = "SELECT tipo,cuenta,saldo FROM sdoca01 WHERE cuenta= ? ";
+            using (var conn = new OleDbConnection(connetionString))
+            {
+                conn.Open();
+
+                using (var cmdOleDb = new OleDbCommand(cmd, conn))
+                {
+                    cmdOleDb.Parameters.AddWithValue("nCuenta", cuenta);
+
+                    using (var reader = cmdOleDb.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            filas.Add(new SaldoCajaAhorro
+                            {
+                                Tipo = Convert.ToString(reader["tipo"]).Trim(),
+                                Cuenta = Convert.ToInt64(reader["cuenta"]),
+                                Saldo = Convert.ToDecimal(reader["saldo"])
+                            });
+                        }
+                        reader.Close();
+                    }
+                }
+                conn.Close();
+            }
+
+            return filas;
+        }
+
         public List<ResumenCuenta> QueryResumenDeCuentasDeSocios(int cuenta, string comprobante, DateTime desde, DateTime hasta)
         {
             List<ResumenCuenta> filas = new List<ResumenCuenta>();
