@@ -112,6 +112,41 @@ namespace MAASoft.HomeBanking.DataAccess
 
         }
 
+        public List<Socio> QuerySocioPorNroSocio(int nrosocio)
+        {
+            List<Socio> valor = new List<Socio>();
+
+            string cmd = "SELECT codigo,nombre,domici,locali,codpostal,telefo,fax,celular,nrodoc,socade,cuota,fecing,fecnac,tipodoc,cuit,sitiva,mail " +
+                " FROM socios WHERE codigo = ?";
+
+            using (var conn = new OleDbConnection(connetionString))
+            {
+                conn.Open();
+
+                using (var cmdOleDb = new OleDbCommand(cmd, conn))
+                {
+                    cmdOleDb.Parameters.AddWithValue("@codigo", nrosocio);
+
+                    using (var reader = cmdOleDb.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            valor.Add(MapearSocio(reader));
+                        }
+                        reader.Close();
+                    }
+                }
+
+                conn.Close();
+            }
+
+            if (valor.Count == 0)
+                valor = null;
+
+            return valor;
+
+        }
+
         #endregion
 
         #region INSERT
@@ -125,7 +160,7 @@ namespace MAASoft.HomeBanking.DataAccess
             {
                 string cmd =
                     "UPDATE socios SET domici = ?, locali = ?, codpostal = ?, telefo = ?, celular = ? " +
-                    "WHERE nombre = ? AND mail = ?";
+                    "WHERE codigo = ?";
 
                 using (var conn = new OleDbConnection(connetionString))
                 {
@@ -138,8 +173,7 @@ namespace MAASoft.HomeBanking.DataAccess
                         cmdOleDb.Parameters.Add("@codpostal", OleDbType.Integer).Value = Convert.ToInt32(socio.CodPostal);
                         cmdOleDb.Parameters.Add("@telefo", OleDbType.VarChar).Value = socio.Telefono;
                         cmdOleDb.Parameters.Add("@celular", OleDbType.VarChar).Value = socio.Celular;
-                        cmdOleDb.Parameters.Add("@nombre", OleDbType.VarChar).Value = socio.Nombre.ToUpper();
-                        cmdOleDb.Parameters.Add("@mail", OleDbType.VarChar).Value = socio.Email;
+                        cmdOleDb.Parameters.Add("@codigo", OleDbType.Integer).Value = socio.Codigo;
                         cmdOleDb.ExecuteNonQuery();
                     }
                     conn.Close();

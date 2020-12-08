@@ -96,6 +96,31 @@ namespace MAASoft.HomeBanking.Controllers
         }
 
         /// <summary>
+        /// Consultas Saldos en Cajas de Ahorros por Nro. Socio.
+        /// </summary>
+        /// <param name="nrosocio">Número del socio.</param>
+        /// <returns>Devuelve lista de objetos SaldoCajaAhorro.</returns>
+        [HttpGet]
+        public RespuestaOperacion<IEnumerable<SaldoCajaAhorro>> ObtenerSaldosCajaDeAhorroPorNroSocio(int nrosocio)
+        {
+            try
+            {
+                    var saldos = consulta.QueryObtenerSaldosCajaDeAhorros(nrosocio);
+                    if (saldos == null)
+                    {
+                        return new RespuestaOperacion<IEnumerable<SaldoCajaAhorro>>("No se encontró la cuenta solicitada.");
+                    }
+                    else
+                        return new RespuestaOperacion<IEnumerable<SaldoCajaAhorro>>(saldos);
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex.Message, ex);
+                return new RespuestaOperacion<IEnumerable<SaldoCajaAhorro>>("No se pudo obtener los saldos de las cajas de ahorro por Socio.");
+            }
+        }
+
+        /// <summary>
         /// Consultas Resumen de cuentas de Socios.
         /// </summary>
         /// <param name="cuenta">Cuenta del socio.</param>

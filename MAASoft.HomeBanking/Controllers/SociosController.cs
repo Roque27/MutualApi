@@ -96,6 +96,20 @@ namespace MAASoft.HomeBanking.Controllers
             }
         }
 
+        [HttpGet]
+        public RespuestaOperacion<Socio> ObtenerSocioPorNroSocio(int nrosocio)
+        {
+            try
+            {
+                return new RespuestaOperacion<Socio>(consulta.QuerySocioPorNroSocio(nrosocio).First());
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex.Message, ex);
+                return new RespuestaOperacion<Socio>("No se pudieron obtener socios por nombre y email.");
+            }
+        }
+
         [HttpPost]
         public RespuestaOperacion<String> ActualizarSocio([FromBody] Socio socio)
         {
