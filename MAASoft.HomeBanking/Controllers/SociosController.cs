@@ -106,7 +106,7 @@ namespace MAASoft.HomeBanking.Controllers
             catch (Exception ex)
             {
                 logger.Error(ex.Message, ex);
-                return new RespuestaOperacion<Socio>("No se pudieron obtener socios por nombre y email.");
+                return new RespuestaOperacion<Socio>("No se pudieron obtener socios por código de socio.");
             }
         }
 
@@ -123,7 +123,7 @@ namespace MAASoft.HomeBanking.Controllers
             catch (Exception ex)
             {
                 logger.Error(ex.Message + " ,InnerException: " + (ex.InnerException != null? ex.InnerException.Message : String.Empty), ex);
-                return new RespuestaOperacion<string>("Ocurrio un error y no se pudo actualizar la informacion del socio.");
+                return new RespuestaOperacion<string>(@"{'Msj':'Ocurrio un error y no se pudo actualizar la informacion del socio.'}");
             }
         }
 

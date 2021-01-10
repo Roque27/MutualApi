@@ -12,6 +12,7 @@ namespace MAASoft.HomeBanking.DataAccess
     public class Queries
     {
         private readonly DateTime DATE_TIME_VACIO = new DateTime(1899, 12, 30);
+        protected string crudCmd = "SET NULL ON\r\nSET DELETED ON\r\nSET EXCLUSIVE OFF";
 
         public string connetionString;
 
