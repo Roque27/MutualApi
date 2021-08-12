@@ -173,6 +173,7 @@
     <Compile Include="Controllers\ImpuestosController.cs" />
     <Compile Include="Controllers\ServiciosController.cs" />
     <Compile Include="Controllers\SociosController.cs" />
+    <Compile Include="Controllers\TransferenciasController.cs" />
     <Compile Include="DataAccess\QueriesServicios.cs" />
     <Compile Include="DataAccess\QueriesSocios.cs" />
     <Compile Include="DataAccess\Queries.cs" />
@@ -181,9 +182,11 @@
     <Compile Include="DataAccess\QueriesCuotasSocietarias.cs" />
     <Compile Include="DataAccess\QueriesFacturacion.cs" />
     <Compile Include="DataAccess\QueriesImpuestos.cs" />
+    <Compile Include="DataAccess\QueriesTransferencias.cs" />
     <Compile Include="Models\RespuestaOperacion.cs" />
     <Compile Include="Models\ServicioCuota.cs" />
     <Compile Include="Models\Socio.cs" />
+    <Compile Include="Models\TransferenciaRealizada.cs" />
     <Compile Include="Seguridad\ValidarTokenAccesoAttribute.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>

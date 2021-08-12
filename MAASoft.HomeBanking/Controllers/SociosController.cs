@@ -111,19 +111,19 @@ namespace MAASoft.HomeBanking.Controllers
         }
 
         [HttpPost]
-        public RespuestaOperacion<String> ActualizarSocio([FromBody] Socio socio)
+        public RespuestaOperacion<Socio> ActualizarSocio([FromBody] Socio socio)
         {
             try
             {
                 if (consulta.QueryActualizarSocio(socio) == Queries.RespuestaQuery.OK)
-                    return new RespuestaOperacion<string>("OK", false);
+                    return new RespuestaOperacion<Socio>("OK", false);
                 else
-                    return new RespuestaOperacion<string>("No se pudo actualizar la informacion del socio.");
+                    return new RespuestaOperacion<Socio>("No se pudo actualizar la informacion del socio.");
             }
             catch (Exception ex)
             {
                 logger.Error(ex.Message + " ,InnerException: " + (ex.InnerException != null? ex.InnerException.Message : String.Empty), ex);
-                return new RespuestaOperacion<string>(@"{'Msj':'Ocurrio un error y no se pudo actualizar la informacion del socio.'}");
+                return new RespuestaOperacion<Socio>(@"{'Msj':'Ocurrio un error y no se pudo actualizar la informacion del socio.'}");
             }
         }
 

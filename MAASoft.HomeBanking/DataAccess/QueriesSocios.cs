@@ -160,28 +160,35 @@ namespace MAASoft.HomeBanking.DataAccess
                 "UPDATE socios SET domici = ?, locali = ?, codpostal = ?, telefo = ?, celular = ? " +
                 "WHERE codigo = ?";
 
-            using (var conn = new OleDbConnection(connetionString))
+            try
             {
-                conn.Open();
-                using (var cmdOleDb = new OleDbCommand(crudCmd, conn))
+                using (var conn = new OleDbConnection(connetionString))
                 {
-                    cmdOleDb.CommandType = CommandType.Text;
-                    cmdOleDb.ExecuteNonQuery();
-                }
+                    conn.Open();
+                    using (var cmdOleDb = new OleDbCommand(crudCmd, conn))
+                    {
+                        cmdOleDb.CommandType = CommandType.Text;
+                        cmdOleDb.ExecuteNonQuery();
+                    }
 
-                using (var cmdOleDb = new OleDbCommand(cmd, conn))
-                {
-                    cmdOleDb.Parameters.Add("@domici", OleDbType.VarChar).Value = socio.Domicilio;
-                    cmdOleDb.Parameters.Add("@locali", OleDbType.VarChar).Value = socio.Localidad;
-                    cmdOleDb.Parameters.Add("@codpostal", OleDbType.Integer).Value = Convert.ToInt32(socio.CodPostal);
-                    cmdOleDb.Parameters.Add("@telefo", OleDbType.VarChar).Value = socio.Telefono;
-                    cmdOleDb.Parameters.Add("@celular", OleDbType.VarChar).Value = socio.Celular;
-                    cmdOleDb.Parameters.Add("@codigo", OleDbType.Integer).Value = socio.Codigo;
-                    cmdOleDb.ExecuteNonQuery();
+                    using (var cmdOleDb = new OleDbCommand(cmd, conn))
+                    {
+                        cmdOleDb.Parameters.Add("@domici", OleDbType.VarChar).Value = socio.Domicilio;
+                        cmdOleDb.Parameters.Add("@locali", OleDbType.VarChar).Value = socio.Localidad;
+                        cmdOleDb.Parameters.Add("@codpostal", OleDbType.Integer).Value = Convert.ToInt32(socio.CodPostal);
+                        cmdOleDb.Parameters.Add("@telefo", OleDbType.VarChar).Value = socio.Telefono;
+                        cmdOleDb.Parameters.Add("@celular", OleDbType.VarChar).Value = socio.Celular;
+                        cmdOleDb.Parameters.Add("@codigo", OleDbType.Integer).Value = socio.Codigo;
+                        cmdOleDb.ExecuteNonQuery();
+                    }
+                    conn.Close();
                 }
-                conn.Close();
+                return RespuestaQuery.OK;
             }
-            return RespuestaQuery.OK;
+            catch(Exception e)
+            {
+                return RespuestaQuery.Error;
+            }
         }
 
         #endregion
